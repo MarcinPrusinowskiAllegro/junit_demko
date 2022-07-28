@@ -30,22 +30,22 @@ class FindItemByIdQuery(
 //                it.bodyToMono(String::class.java)
 //            }
 
-        val result = coroutineScope {
-
-            val first = async { firstCall() }
-            val second = async { secondCall() }
-            val third = async { thirdCall() }
-
-            CallResult(
-                first = first.await(),
-                second = second.await(),
-                third = third.await()
-            )
-        }
-
+        val result = concurrentResult()
 
         println(result)
         return findItemByIdRepository.findById(id)
+    }
+
+    private suspend fun concurrentResult() = coroutineScope {
+        val first = async { firstCall() }
+        val second = async { secondCall() }
+        val third = async { thirdCall() }
+
+        CallResult(
+            first = first.await(),
+            second = second.await(),
+            third = third.await()
+        )
     }
 
 }
