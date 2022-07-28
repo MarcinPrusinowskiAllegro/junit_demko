@@ -29,11 +29,18 @@ class FindItemByIdQuery(
 //            .awaitExchange {
 //                it.bodyToMono(String::class.java)
 //            }
+        sideEffect(id)
 
         val result = concurrentResult()
 
         println(result)
         return findItemByIdRepository.findById(id)
+    }
+
+    private suspend fun sideEffect(id: Int): Unit = coroutineScope {
+        launch {
+            println("FindItemByIdQuery event for $id executed")
+        }
     }
 
     private suspend fun concurrentResult() = coroutineScope {
